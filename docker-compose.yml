@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./react-collab
+    ports:
+      - 5173:5173
+
+  backend:
+    build: ./spring-collab
+    ports:
+      - 8080:8080
