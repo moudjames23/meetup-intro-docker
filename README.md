@@ -310,7 +310,6 @@ Nous allons utilisez la commande docker run
   
 Bien sûr, voici une explication simple de la commande :
 
-bashCopy code
 
 `docker run -p 8080:8080 spring-backend:0.0.1` 
 
@@ -483,7 +482,56 @@ Assurez-vous que votre container `spring-backend` est bien sur le port `8080`.
 Normalement vous êtes  censé la liste des étudiants  affichée  dans votre navigateur. 
 
  ## 7. Docker Compose
+Pour notre projet, il faut lancer le container du frontend, après  le backend. Imaginons qu'on ait une dizaine d'images à lancer ça devenir vite fatiguant. Donc, c'est dans ce cadre là, que Docker compose entre en jeu. 
 
- ## 8. MySQL & Adminer
+ Docker Compose, c'est un peu comme un chef d'orchestre pour les conteneurs Docker. Imaginez que vous avez plein de musiciens (vos conteneurs Docker), chacun jouant un instrument différent, et vous voulez qu'ils jouent ensemble en harmonie. Plutôt que de les diriger un par un, vous engagez un chef d'orchestre (Docker Compose) qui connaît la partition (le fichier `docker-compose.yml`) et sait comment tout le monde doit jouer ensemble.
 
- ## 9. Les bonnes pratiques avec Docker
+Dans le monde réel, disons que vous travaillez sur un projet qui nécessite plusieurs services, comme une base de données, un serveur web, et peut-être même un service pour gérer les tâches en arrière-plan. Sans Docker Compose, vous devriez lancer et gérer chacun de ces services manuellement, ce qui peut rapidement devenir compliqué. Avec Docker Compose, vous pouvez définir tous ces services dans un seul fichier, puis les démarrer ou les arrêter tous en même temps avec une seule commande. Cela rend non seulement le processus de gestion beaucoup plus simple, mais assure également que tout le monde dans votre équipe travaille dans un environnement identique, éliminant les problèmes classiques du genre "ça marche sur ma machine".
+
+Créons notre fichier `docker-compose.yml` à la racine de notre projet. 
+
+Indique la version de la syntaxe Docker Compose utilisée dans ce fichier. La version `3.8` est l'une des versions les plus récentes disponibles (selon ma date de dernière mise à jour en janvier 2022).
+
+    version "3.8"
+
+Maintenant, définissons nos deux services, frontend et backend. 
+
+    services:
+      frontend:
+    
+      backend:
+
+Indiquons le chemin où se trouve notre Dockerfile pour chacun de nos services. 
+
+    services:
+      frontend:
+        build: ./frontend
+    
+      backend:
+        build: ./backend
+
+Comme on l'a fait pour mapper le port physique et le port du container qui a été exposé dans nos Dockerfile. 
+
+    services:
+      frontend:
+        build: ./frontend
+        ports:
+          - 5173:5173
+    
+      backend:
+        build: ./backend
+        ports:
+          - 8080:8080
+
+Pour lancer notre docker compose il faut taper la commande: 
+
+    docker compose up -d 
+
+le backend sera accessible: `http:127.0.0.1:8080/api/v1/students`
+et le frontend: `http:127.0.0.1:5173`
+
+Pour stopper les containers, taper cette commande: 
+
+    docker compose stop -d
+
+ ## 8. Les bonnes pratiques avec Docker (à venir)
